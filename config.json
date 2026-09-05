@@ -1,0 +1,34 @@
+{
+  "_about": "Standalone A1+A2+A3 (9-class) MLLM-free face real/fake ensemble. Paths are relative to this file.",
+  "device": "auto",
+  "image_size": 336,
+  "base_models": {
+    "image": "base_models/clip-vit-large-patch14-336",
+    "text": "base_models/t5-base"
+  },
+  "members": [
+    {"name": "A1_9c", "checkpoint": "weights/A1_svd_9c.pt"},
+    {"name": "A2_9c", "checkpoint": "weights/A2_svdgend_9c.pt"},
+    {"name": "A3_9c", "checkpoint": "weights/A3_midspp_9c.pt"}
+  ],
+  "fake_score": "mean_marginal",
+  "fusion": "mean (per-model Platt calibration fit to identity on the tuning set)",
+  "threshold": 0.5343,
+  "threshold_note": "0.5343 = in-sample optimum on the full heldout3/frames test (max PAD-recall s.t. real-recall>=85%): real 85.0 / PAD 98.7. 0.6337 = source-disjoint-tuned default (more conservative; real 88.1 / PAD 98.1 on the same full set). Use 0.6337 for robust deployment on new data.",
+  "source_disjoint_default": 0.6337,
+  "threshold_options": {
+    "max_pad_real85": {"tau": 0.6257, "eval_pad": 98.7, "eval_real": 85.3, "eval_deepfake": 92.5},
+    "balanced_real85": {"tau": 0.6337, "eval_pad": 98.6, "eval_real": 86.2, "eval_deepfake": 91.9},
+    "real86": {"tau": 0.6403, "eval_pad": 98.4, "eval_real": 87.0, "eval_deepfake": 91.4},
+    "real88": {"tau": 0.6491, "eval_pad": 98.2, "eval_real": 88.4, "eval_deepfake": 90.2},
+    "real90": {"tau": 0.6530, "eval_pad": 97.8, "eval_real": 90.1, "eval_deepfake": 88.8}
+  },
+  "texts": [
+    "misaligned features, smooth skin, inconsistent lighting, blending artifacts, unnatural integration between the face and body/the face and the background",
+    "flat depth, uniform lighting, screen smoothing, moire patterns, screen borders, UI, reflections, glossy/plastic skin, rigid edges, hand-holding signs, recapture blur",
+    "consistent facial features, natural skin texture, consistent lighting, normal facial 3D depth, the absence of clear manipulation or visible artifacts"
+  ],
+  "texts_claim_order": ["deepfake", "pad", "real"],
+  "label_scheme": "9-class: label = 3*true + claim ; true/claim in {0:real, 1:pad, 2:deepfake} ; pad includes makeup",
+  "eval_note": "Numbers above are recall (%) on a 30K video/identity-disjoint held-out set (frame-based, full-image, MLLM-free)."
+}
