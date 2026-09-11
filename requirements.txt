@@ -1,0 +1,16 @@
+# Validated with Python 3.x + transformers 5.12 (the encoders/checkpoint loader also handle the
+# transformers 4.37 CLIPVisionModel naming). Install into a fresh venv:
+#   python -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+torch>=2.1
+transformers>=4.37
+numpy
+opencv-python-headless
+sentencepiece
+protobuf
+safetensors
+
+# --- optional: REST API server (app_fastapi_json.py, port 3001) ---
+fastapi
+uvicorn[standard]
+python-multipart
+pillow
